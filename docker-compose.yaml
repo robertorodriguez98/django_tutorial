@@ -1,0 +1,32 @@
+version: '3.1'
+services:
+  django-tutorial:
+    container_name: django-tutorial
+    image: robertorm/django_tutorial
+    restart: always
+    environment:
+      ALLOWED_HOSTS: "*"
+      DJANGODB_HOST: django-mariadb
+      DJANGODB_USUARIO: django
+      DJANGODB_CONTRASENA: django
+      NAME: django     
+      DJANGO_SUPERUSER_PASSWORD: admin
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_EMAIL: admin@example.org
+    ports:
+      - 8082:4000
+    depends_on:
+      - db_django
+  db_django:
+    container_name: django-mariadb
+    image: mariadb:10.5
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: django
+      MARIADB_USER: django
+      MARIADB_PASSWORD: django
+    volumes:
+      - mariadb_data_django:/var/lib/mysql
+volumes:
+    mariadb_data_django:
