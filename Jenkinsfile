@@ -1,4 +1,8 @@
 pipeline {
+    environment {
+        IMAGEN = "robertorm/django_tutorial"
+        LOGIN = 'USER_DOCKERHUB'
+    }
     agent {
         docker { image 'python:3'
         args '-u root:root'
