@@ -1,34 +1,24 @@
 pipeline {
-    environment {
-        IMAGEN = "robertorm/django_tutorial"
-        LOGIN = 'USER_DOCKERHUB'
+    agent {
+        docker { image 'python:3'
+        args '-u root:root'
+        }
     }
-    agent none
     stages {
-        stage("Desarrollo") {
-            agent {
-                docker { image "python:3"
-                args '-u root:root'
-                }
+        stage('Clone') {
+            steps {
+                git branch:'master',url:'https://github.com/robertorodriguez98/django_tutorial'
             }
-            stages {
-                stage('Clone') {
-                    steps {
-                        git branch:'main',url:'https://github.com/robertorodriguez98/django_tutorial.git'
-                    }
-                }
-                stage('Install') {
-                    steps {
-                        sh 'pip install -r requirements.txt'
-                    }
-                }
-                stage('Test')
-                {
-                    steps {
-                        sh 'python3 manage.py test'
-                    }
-                }
-
+        }
+        stage('Install') {
+            steps {
+                sh 'pip install -r requirements.txt'
+            }
+        }
+        stage('Test')
+        {
+            steps {
+                sh 'python3 manage.py test'
             }
         }
         stage("Construccion") {
@@ -36,7 +26,7 @@ pipeline {
             stages {
                 stage('CloneAnfitrion') {
                     steps {
-                        git branch:'main',url:'https://github.com/robertorodriguez98/django_tutorial.git'
+                        git branch:'master',url:'https://github.com/robertorodriguez98/django_tutorial.git'
                     }
                 }
                 stage('BuildImage') {
