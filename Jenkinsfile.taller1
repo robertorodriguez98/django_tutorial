@@ -4,7 +4,7 @@ pipeline {
         LOGIN = 'USER_DOCKERHUB'
     }
     agent none
-    stages {
+stages {
         stage("Desarrollo") {
             agent {
                 docker { image "python:3"
@@ -14,7 +14,7 @@ pipeline {
             stages {
                 stage('Clone') {
                     steps {
-                        git branch:'master',url:'https://github.com/robertorodriguez98/django_tutorial.git'
+                        git branch:'master',url:'https://github.com/robertorodriguez98/django_tutorial'
                     }
                 }
                 stage('Install') {
@@ -58,15 +58,6 @@ pipeline {
                 stage('RemoveImage') {
                     steps {
                         sh "docker rmi $IMAGEN:latest"
-                    }
-                }
-                stage ('SSH') {
-                    steps{
-                        sshagent(credentials : ['SSH_ROOT']) {
-                            sh 'ssh -o StrictHostKeyChecking=no root@nodriza.admichin.es docker rmi -f $IMAGEN:latest'
-                            sh 'ssh -o StrictHostKeyChecking=no root@nodriza.admichin.es wget https://raw.githubusercontent.com/robertorodriguez98/django_tutorial/master/docker-compose.yaml -O docker-compose.yaml'
-                            sh 'ssh -o StrictHostKeyChecking=no root@nodriza.admichin.es docker-compose up -d --force-recreate'
-                        }
                     }
                 }
             }
